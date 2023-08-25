@@ -18,17 +18,23 @@ This following capabilities and devices are needed for the container to work:
 |-------------------|---------------------------------------------------------|
 | `/dev/net/tun` | This device is necessary for tunneling in VPNs. |
 
-### docker
+### Network
+To tunnel host traffic through the container, it needs to be created with network-mode `host` (or with a little more config, `bridge`).
+Using `host` mode doesn't isolate the container network from the host.
+
+### Starting the service
+
+#### docker
   
 To run the container using Docker:
 
 ```bash
 
-docker  run  -it  --cap-add  NET_ADMIN  -v  /dev/net/tun:/dev/net/tun  -v  /path/to/config:/config  -e  CONFIG_FILE=your_config.ovpn  valtma/openvpn-client:latest
+docker run -it --cap-add NET_ADMIN --network host -v /dev/net/tun:/dev/net/tun -v /path/to/config:/config -e CONFIG_FILE=your_config.ovpn valtma/openvpn-client:latest
 
 ```
 
-### docker compose
+#### docker compose
 
 Sample file:
 
@@ -38,6 +44,7 @@ services:
 	openvpn-client:
 		container_name:  openvpn-client
 		image:  valtma/openvpn-client:latest
+    network_mode: host
 		cap_add:
 			- NET_ADMIN
 		devices:
@@ -46,8 +53,19 @@ services:
 			- /path/to/config:/config
 ```
 
+### Tunneling traffic of other containers through the VPN
 
-To use the created container with other containers, add the `depends_on: openvpn-client` and `network_mode: service: openvpn-client` key/value pairs to your service:
+You can use the `--network` flag or `network` key to tunnel the traffic of other containers through the VPN container.
+
+#### docker
+Create the vpn container, and once it's up and running use the following flag:
+
+```
+docker run --network container:openvpn-client example/image
+```
+
+#### docker compose
+Add the `depends_on: openvpn-client` and `network_mode: service: openvpn-client` key/value pairs to your service:
 
 ```yaml
 version: '3'
@@ -63,7 +81,7 @@ services:
 
 ```
 
-## Volumes
+### Volumes
 
 The following volumes can be mounted:
 
@@ -71,7 +89,7 @@ The following volumes can be mounted:
 |---------------|---------------|---------------------------------------------------------------------------------------------------------|
 | `/config` | Yes | This directory should contain your OpenVPN configuration files (`*.ovpn`). |
 
-## Env variables
+### Env variables
 
 | Environment Variable | Required? | Description |
 |----------------------|---------------|-----------------------------------------------------------------------------------------------------------------|
