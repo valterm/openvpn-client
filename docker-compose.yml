@@ -1,0 +1,13 @@
+version: '3'
+services:
+# create openvpn-client from valtma/openvpn-client
+  openvpn-client:
+    container_name: openvpn-client
+    image: valtma/openvpn-client:dev
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      - ./config:/config
+      - ./config/resolv.conf:/etc/resolv.conf
