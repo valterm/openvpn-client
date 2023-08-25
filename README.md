@@ -41,16 +41,16 @@ Sample file:
 ```yaml
 version:  '3'
 services:
-	openvpn-client:
-		container_name:  openvpn-client
-		image:  valtma/openvpn-client:latest
+  openvpn-client:
+    container_name:  openvpn-client
+    image:  valtma/openvpn-client:latest
     network_mode: host
-		cap_add:
-			- NET_ADMIN
-		devices:
-			- /dev/net/tun
-		volumes:
-			- /path/to/config:/config
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    volumes:
+      - /path/to/config:/config
 ```
 
 ### Tunneling traffic of other containers through the VPN
