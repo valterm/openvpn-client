@@ -10,18 +10,6 @@ cleanup() {
     wait "${openvpn_pid}"
 }
 
-# If $NAMESERVER is set, rewrite the nameserver IP to the given value in /etc/resolv.conf
-if [[ -n "${NAMESERVER:-}" ]]; then
-    echo "\$NAMESERVER set; setting DNS address to ${NAMESERVER}..."
-    sed "s/^nameserver .*/nameserver ${NAMESERVER}/" /etc/resolv.conf >> /etc/resolv2.conf
-    echo "" > /etc/resolv.conf
-    cat /etc/resolv2.conf >> /etc/resolv.conf
-    rm /etc/resolv2.conf
-    # Ugly workaround; docker mounts /etc/resolv.conf, so you can't directly manipulate it with sed -i.
-else 
-    echo "\$NAMESERVER not set; using default DNS address..."
-fi
-
 # If the $CONFIG_FILE variable is set, set config_file to that value, else get a random *.ovpn from the /config directory
 if [[ -n "${CONFIG_FILE:-}" ]]; then
     config_file="/config/${CONFIG_FILE}"
