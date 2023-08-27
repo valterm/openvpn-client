@@ -27,11 +27,27 @@ fi
 # Print the config file name as info
 echo "Using config file: ${config_file}"
 
-# Set up the openvpn arguments
-openvpn_args=(
-    "--config" "${config_file}"
-    "--cd" "/config"
-)
+# If $PASSWORD and $USERNAME are set, set auth_file to a temporary file containing the username and password
+if [[ -n "${PASSWORD:-}" && -n "${USERNAME:-}" ]]; then
+    auth_file="$(mktemp)"
+    echo "${USERNAME}" > "${auth_file}"
+    echo "${PASSWORD}" >> "${auth_file}"
+fi
+
+# Set up the openvpn arguments for config, cd, and auth file (if set)
+if [[ -n "${auth_file:-}" ]]; then
+    openvpn_args=(
+        "--config" "${config_file}"
+        "--cd" "/config"
+        "--auth-user-pass" "${auth_file:-}"
+    )
+else
+    openvpn_args=(
+        "--config" "${config_file}"
+        "--cd" "/config"
+    )
+fi
+
 
 # Start openvpn with the given arguments
 openvpn "${openvpn_args[@]}" &
