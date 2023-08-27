@@ -4,7 +4,7 @@ A container for running an OpenVPN client. Aims to create a lightweight and easi
 
 ## Usage
 
-This following capabilities and devices are needed for the container to work:
+The following capabilities and devices are needed for the container to work:
 
 ### Capabilities
 
@@ -19,8 +19,7 @@ This following capabilities and devices are needed for the container to work:
 | `/dev/net/tun` | This device is necessary for tunneling in VPNs. |
 
 ### Network
-To tunnel host traffic through the container, it needs to be created with network-mode `host` (or with a little more config, `bridge`).
-Using `host` mode doesn't isolate the container network from the host.
+To set the VPN for your entire host, use network-mode `host`. If you'd prefer to isolate it only for containers within the stack, use `bridge`.
 
 ### Starting the service
 
@@ -44,7 +43,7 @@ services:
   openvpn-client:
     container_name:  openvpn-client
     image:  valtma/openvpn-client:latest
-    network_mode: host
+    network_mode: host # set to bridge to isolate from host network
     cap_add:
       - NET_ADMIN
     devices:
