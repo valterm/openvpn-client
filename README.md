@@ -38,16 +38,20 @@ docker run -it --cap-add NET_ADMIN --network host -v /dev/net/tun:/dev/net/tun -
 Sample file:
 
 ```yaml
-version:  '3'
+version: '3'
 services:
   openvpn-client:
-    container_name:  openvpn-client
-    image:  valtma/openvpn-client:latest
-    network_mode: host # set to bridge to isolate from host network
+    container_name: openvpn-client
+    image: valtma/openvpn-client:latest
+    network_mode: bridge
     cap_add:
       - NET_ADMIN
     devices:
       - /dev/net/tun
+    dns:
+      - 208.67.222.222 # OpenDNS; optional if you want to use your own DNS
+    environtment:
+      - 'LOCAL_NETWORK=192.168.0.0/24'
     volumes:
       - /path/to/config:/config
 ```
