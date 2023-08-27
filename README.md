@@ -19,7 +19,7 @@ The following capabilities and devices are needed for the container to work:
 | `/dev/net/tun` | This device is necessary for tunneling in VPNs. |
 
 ### Network
-To set the VPN for your entire host, use network-mode `host`. If you'd prefer to isolate it only for containers within the stack, use `bridge`.
+To set the VPN for your entire host, use network-mode `host`. If you'd prefer to isolate it only for containers within the stack, use `bridge`, but note that ipv4 forwarding must be enabled for it to work.
 
 ### Starting the service
 
@@ -76,7 +76,7 @@ services:
     image: example/image
     depends_on:
       - openvpn-client
-    network_mode: service:vpn
+    network_mode: service:openvpn-client
 
 ```
 
@@ -92,6 +92,7 @@ The following volumes can be mounted:
 
 | Environment Variable | Required? | Description |
 |----------------------|---------------|-----------------------------------------------------------------------------------------------------------------|
+| `LOCAL_NETWORK` | Conditional | Required if using `bridge` mode. The CIDR of the local network the VPN container should route to. |
 | `CONFIG_FILE` | No | Specify a particular OpenVPN configuration file from the `/config` directory. If not set, a random `.ovpn` file from the `/config` directory will be used. |
 | `USERNAME` | Conditional | Specify the username in case your config requires authentication. Must be set if `PASSWORD` is set. |
 | `PASSWORD` | Conditional | Specify the password in case your config requires authentication. Must be set if `USERNAME` is set. |
