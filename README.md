@@ -93,3 +93,4 @@ The following volumes can be mounted:
 | Environment Variable | Required? | Description |
 |----------------------|---------------|-----------------------------------------------------------------------------------------------------------------|
 | `CONFIG_FILE` | No | Specify a particular OpenVPN configuration file from the `/config` directory. If not set, a random `.ovpn` file from the `/config` directory will be used. |
+| `NAMESERVER` | No | Specify a custom DNS nameserver. Will replace the default value in `/etc/resolv.conf`. |
