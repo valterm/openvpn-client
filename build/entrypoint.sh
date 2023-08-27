@@ -48,6 +48,14 @@ else
     )
 fi
 
+# Set up IP routing to the specified LOCAL_NETWORK
+if [[ -n "${LOCAL_NETWORK:-}" ]]; then
+    # Get the default gateway in the container
+    default_gateway=$(ip route | awk '/default/ {print $3}')
+    # Add a route to the specified LOCAL_NETWORK via the default gateway
+    ip route add "${LOCAL_NETWORK}" via "${default_gateway}"
+fi
+
 
 # Start openvpn with the given arguments
 openvpn "${openvpn_args[@]}" &

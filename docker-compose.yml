@@ -2,11 +2,15 @@ version: '3'
 services:
   openvpn-client:
     container_name: openvpn-client
-    image: valtma/openvpn-client:dev
-    network_mode: host
+    image: valtma/openvpn-client:latest
+    network_mode: bridge
     cap_add:
       - NET_ADMIN
     devices:
-      - /dev/net/tun:/dev/net/tun
+      - /dev/net/tun
+    dns:
+      - 208.67.222.222 # OpenDNS; optional if you want to use your own DNS
+    environtment:
+      - 'LOCAL_NETWORK=192.168.0.0/24'
     volumes:
       - /path/to/config:/config
