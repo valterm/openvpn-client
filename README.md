@@ -29,7 +29,7 @@ To run the container using Docker:
 
 ```bash
 
-docker run -it --cap-add NET_ADMIN --network host -v /dev/net/tun:/dev/net/tun -v /path/to/config:/config -e CONFIG_FILE=your_config.ovpn valtma/openvpn-client:latest
+docker run -it --cap-add NET_ADMIN --network host -v /dev/net/tun:/dev/net/tun -v /path/to/config:/config -e CONFIG_FILE=your_config.ovpn valtimalti/openvpn-client:latest
 
 ```
 
@@ -42,7 +42,7 @@ version: '3'
 services:
   openvpn-client:
     container_name: openvpn-client
-    image: valtma/openvpn-client:latest
+    image: valtimalti/openvpn-client:latest
     network_mode: bridge
     cap_add:
       - NET_ADMIN
@@ -100,4 +100,5 @@ The following volumes can be mounted:
 | `CONFIG_FILE` | No | Specify a particular OpenVPN configuration file from the `/config` directory. If not set, a random `.ovpn` file from the `/config` directory will be used. |
 | `USERNAME` | Conditional | Specify the username in case your config requires authentication. Must be set if `PASSWORD` is set. |
 | `PASSWORD` | Conditional | Specify the password in case your config requires authentication. Must be set if `USERNAME` is set. |
+| `ADAPTER` | No | Change the default network adapter. If not set, the default tunnel device will be used (most likely `tun0`.) |
 
