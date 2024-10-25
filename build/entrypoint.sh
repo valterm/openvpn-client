@@ -34,18 +34,21 @@ if [[ -n "${PASSWORD:-}" && -n "${USERNAME:-}" ]]; then
     echo "${PASSWORD}" >> "${auth_file}"
 fi
 
-# Set up the openvpn arguments for config, cd, and auth file (if set)
+# Initialize openvpn_args with required arguments
+openvpn_args=(
+    "--config" "${config_file}"
+    "--cd" "/config"
+)
+
+# If ADAPTER is set, add the --dev option
+if [[ -n "${ADAPTER:-}" ]]; then
+    openvpn_args+=( "--dev" "${ADAPTER}" )
+    echo "Using network adapter: ${ADAPTER}"
+fi
+
+# If auth_file is set, add the --auth-user-pass option
 if [[ -n "${auth_file:-}" ]]; then
-    openvpn_args=(
-        "--config" "${config_file}"
-        "--cd" "/config"
-        "--auth-user-pass" "${auth_file:-}"
-    )
-else
-    openvpn_args=(
-        "--config" "${config_file}"
-        "--cd" "/config"
-    )
+    openvpn_args+=( "--auth-user-pass" "${auth_file}" )
 fi
 
 # Set up IP routing to the specified LOCAL_NETWORK
