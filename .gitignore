@@ -1,2 +1,6 @@
 .dev*
 *.zip
+*.tar*
+*.env*
+*.log*
+.DS_Store
